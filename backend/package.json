@@ -1,0 +1,12 @@
+{
+  "name": "stridemate",
+  "version": "1.0.0",
+  "description": "StrideMate - Cloud weather, live time, and Leaflet workout route tracker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
