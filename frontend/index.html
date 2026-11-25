@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StrideMate</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="/styles/main.css" />
+</head>
+<body>
+  <main id="screen-home" class="screen screen-home is-active" aria-label="Cloud Home">
+    <video class="bg-video" autoplay muted loop playsinline aria-hidden="true">
+      <source src="/assets/bg.mp4" type="video/mp4" />
+    </video>
+    <div class="bg-scrim" aria-hidden="true"></div>
+
+    <header class="home-header">
+      <button id="btn-open-runs" class="icon-btn" type="button" aria-label="Saved Runs">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      </button>
+    </header>
+
+    <section class="home-center">
+      <div class="cloud-wrap">
+        <svg class="cloud-svg" viewBox="0 0 460 280" aria-hidden="true">
+          <defs>
+            <linearGradient id="cloudFill" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(255, 255, 255, 0.14)" />
+              <stop offset="100%" stop-color="rgba(255, 255, 255, 0.05)" />
+            </linearGradient>
+          </defs>
+          <path d="M 116 244 C 65 244, 30 210, 30 164 C 30 124, 58 92, 95 85 C 103 44, 140 18, 182 22 C 194 23, 205 27, 214 33 C 234 14, 263 6, 294 12 C 343 21, 378 65, 376 116 C 409 124, 430 152, 430 184 C 430 219, 400 244, 360 244 Z" fill="url(#cloudFill)" stroke="rgba(255, 255, 255, 0.34)" stroke-width="1.5" />
+        </svg>
+
+        <div class="cloud-content">
+          <button id="home-weather" class="cloud-weather" type="button" title="Click to toggle °C / °F">--°C · Loading</button>
+          <p id="home-city" class="cloud-city">Detecting location...</p>
+          <p id="home-time" class="cloud-time">00:00:00</p>
+        </div>
+      </div>
+
+      <button id="btn-start-workout" class="start-btn" type="button">START WORKOUT</button>
+      <p id="home-status" class="status-banner" role="status" hidden></p>
+    </section>
+  </main>
+
+  <main id="screen-map" class="screen screen-map" aria-label="Workout Map" hidden>
+    <div id="workout-map" class="workout-map"></div>
+
+    <div class="map-top-left">
+      <button id="btn-back-home" class="map-control-btn" type="button">Back</button>
+      <div class="search-box">
+        <input id="city-search-input" class="search-input" type="search" placeholder="Search location..." autocomplete="off" aria-label="Search location" />
+        <ul id="city-search-results" class="search-results" hidden></ul>
+      </div>
+      <button id="btn-undo-waypoint" class="map-control-btn" type="button" disabled>Undo</button>
+    </div>
+
+    <section class="workout-card" aria-label="Workout timer">
+      <div class="workout-card-top">
+        <span class="workout-label">TIME</span>
+        <span id="workout-timer" class="workout-timer">00:00:00</span>
+        <span id="workout-distance" class="workout-distance">0.00 km</span>
+      </div>
+      <div class="workout-metrics">
+        <div class="metric-item">
+          <span class="metric-label">PACE</span>
+          <span id="workout-pace" class="metric-value">--:-- /km</span>
+        </div>
+      </div>
+      <div class="workout-card-bottom">
+        <label class="activity-label" for="activity-select">
+          Activity
+          <select id="activity-select" class="activity-select">
+            <option value="Run">Run</option>
+            <option value="Walk">Walk</option>
+            <option value="Cycle">Cycle</option>
+          </select>
+        </label>
+        <div class="workout-actions">
+          <button id="btn-pause-workout" class="pause-btn" type="button">Pause</button>
+          <button id="btn-stop-workout" class="stop-btn" type="button">Stop</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside id="runs-drawer" class="runs-drawer" aria-label="Saved Runs" hidden>
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+    <div class="drawer-panel">
+      <header class="drawer-header">
+        <h2 class="drawer-title">Saved Runs</h2>
+        <button id="btn-close-runs" class="drawer-close-btn" type="button">Close</button>
+      </header>
+
+      <div class="drawer-controls">
+        <input id="runs-search" class="drawer-input" type="search" placeholder="Search location or activity..." aria-label="Search saved runs" />
+        <div class="drawer-filter-row">
+          <div class="filter-pills" role="group" aria-label="Filter by activity">
+            <button class="filter-pill is-selected" data-filter="All" type="button">All</button>
+            <button class="filter-pill" data-filter="Run" type="button">Run</button>
+            <button class="filter-pill" data-filter="Walk" type="button">Walk</button>
+            <button class="filter-pill" data-filter="Cycle" type="button">Cycle</button>
+          </div>
+          <select id="runs-sort" class="drawer-select" aria-label="Sort saved runs">
+            <option value="newest">Newest</option>
+            <option value="longest-time">Longest Time</option>
+            <option value="longest-distance">Longest Distance</option>
+          </select>
+        </div>
+      </div>
+
+      <ul id="runs-list" class="runs-list"></ul>
+    </div>
+  </aside>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="/scripts/app.js"></script>
+</body>
+</html>
